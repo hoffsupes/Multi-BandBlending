@@ -1,4 +1,18 @@
 
+
+//////////////////////////////////////////////////////////////////////
+//. Disclaimer:
+// ************************************************************
+// Warning! This contains the **WHOLE** workspace over the development (at least most of it) including most of the attempts
+// and is NOT the final version that was submitted (may be the LATEST WORKING REVISION but not the version which was cleaned up and submitted but the one I kept for future reference, personal use and records) but because of being in its early stages
+// of dev, contains the initial RAW version of ALL (most) of the code present. This means that only the functions USED in the code are the one's relevant.
+// The code may contain multiple redundant versions of functions used in multiple stages of development or include files which were specifically created for another project. YOU'LL HAVE TO TAKE CARE OF THESE DETAILS YOURSELF.
+// ALSO USE AT YOUR OWN RISK.
+// PS: I created this to understand how multiband blending works and incoporate it into something, because it specifically required this. If you're only looking to do simple blending and need a quick final product, OpenCV has an inbuilt stitcher class.				
+// ************************************************************
+// ************************************************************
+
+
 #include <opencv2/highgui/highgui.hpp>
 #include <algorithm>
 #include <opencv2/core/core.hpp>
@@ -7,7 +21,6 @@
 #include <cstdarg>
 #include "opencv2/opencv.hpp"
 #include "fstream"
-#include "Ctracker.h"
 #include <dirent.h>
 #include <math.h>
 #include <time.h>
@@ -26,55 +39,6 @@ using namespace cv;
 using	namespace	cv::videostab;
 using namespace cv::detail;
 
-void regstECC(Mat src,Mat dst,Mat &U,const int warp_mode) // src:: reference/template frame dst::inst frame
-{
-// Convert images to gray scale;
-Mat im1_gray, im2_gray;
-	
-cvtColor(src, im1_gray, CV_BGR2GRAY);
-cvtColor(dst, im2_gray, CV_BGR2GRAY);
-	
- 
-// Define the motion model
-// const int warp_mode = MOTION_AFFINE;
- 
-// Set a 2x3 or 3x3 warp matrix depending on the motion model.
-Mat warp_matrix;
- 
-// Initialize the matrix to identity
-if ( warp_mode == MOTION_HOMOGRAPHY )
-    warp_matrix = Mat::eye(3, 3, CV_32F);
-else
-    warp_matrix = Mat::eye(2, 3, CV_32F);
- 
-// Specify the number of iterations.
-int number_of_iterations = 100;
- 
-// Specify the threshold of the increment
-// in the correlation coefficient between two iterations
-double termination_eps = 1e-10;
- 
-// Define termination criteria
-TermCriteria criteria (TermCriteria::COUNT+TermCriteria::EPS, number_of_iterations, termination_eps);
- 
-// Run the ECC algorithm. The results are stored in warp_matrix.
-findTransformECC(
-                 im1_gray,
-                 im2_gray,
-                 warp_matrix,
-                 warp_mode,
-                 criteria
-             );
- 
-// Storage for warped image.
- 
-if (warp_mode != MOTION_HOMOGRAPHY)
-    // Use warpAffine for Translation, Euclidean and Affine
-    warpAffine(dst,U, warp_matrix, src.size(), INTER_LINEAR);
-else
-    // Use warpPerspective for Homography
-    warpPerspective (dst, U, warp_matrix, src.size(),INTER_LINEAR);
-}
 
 Mat getreducemat(Mat mgpts,Mat scpts,Mat a13,Mat a46)
 {
