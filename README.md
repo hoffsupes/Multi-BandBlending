@@ -4,4 +4,4 @@ Implements Pyramidal blending wherein a laplacian pyramid is created out of port
 
 Coming Soon: 
 
-Small linux executable to do pyramidal blending! Also: Linux based computer vision software to do various things! (be on the lookout for this!)
+Small linux executable to do pyramidal blending! Also some interesting 3D reconstruction work I'm doing! Like view based simulations? Stay tuned!!
